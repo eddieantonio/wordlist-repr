@@ -28,21 +28,37 @@ main().catch(err => {
 });
 
 async function main () {
+  // ad hoc command line parsing
   let [_node, _scriptName, subcommand, ...options] = process.argv;
 
-  // ad hoc command line parsing
-  if (subcommand !== 'build') {
-    throw new Error(`requires subcommand: 'build'`);
-  }
+  if (subcommand === 'build-raw-wordlist') {
+    // Build a dumb wordlist.
+    let [flag, outfile, infile] = options;
+    if (flag !== '-o' || !outfile || !infile) {
+      throw new Error('invalid command line');
+    }
+    await createWordlist(infile, outfile);
 
-  let [flag, outfile, infile] = options;
-  if (flag !== '-o' || !outfile || !infile) {
-    throw new Error('invalid command line');
+  } else if (subcommand === 'build') {
+    // Delegate to an algorithm.
+    let [algorithm, flag, outfile, infile] = options;
+    if (!algorithm || flag !== '-o' || !outfile || !infile) {
+      throw new Error(`invalid command line: ${options.join(' ')}`);
+    }
+
+    let {build} = require(`./algorithms/${algorithm}`);
+
+    let wordlist = libwordlist.loadWordList(infile);
+    let dataStructure = build(wordlist);
+    await fs.promises.writeFile(outfile, JSON.stringify(dataStructure), 'UTF-8');
+
+  } else {
+    throw new Error(`invalid subcommand: '${subcommand}'`);
   }
-  await createWordlist(infile, outfile);
 }
 
 async function createWordlist(infile, outfile) {
   let wordlist = await libwordlist.buildWordList(infile);
   fs.promises.writeFile(outfile, JSON.stringify(wordlist), 'UTF-8');
 }
+

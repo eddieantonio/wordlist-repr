@@ -54,3 +54,8 @@ exports.buildWordList = async function buildWordList(filename) {
     wordlist: list
   };
 };
+
+exports.loadWordList = async function loadWordList(filename) {
+  let contents = await fs.promises.readFile(filename, 'UTF-8');
+  return JSON.parse(contents);
+};

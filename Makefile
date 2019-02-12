@@ -17,9 +17,18 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-all: build/SaanichWordFreq.raw-wordlist
+all: build/SaanichWordFreq.raw-wordlist.js
 
-build/%.raw-wordlist: data/%.tsv
-	node index.js build -o $@ $<
+build/%.raw-wordlist.js: data/%.tsv
+	node index.js build-raw-wordlist -o $@ $<
+
+build/%.array.js: data/%.tsv
+	node index.js build simple-array -o $@ $<
+
+build/%.array.js: data/%.tsv
+	node index.js build length-array -o $@ $<
+
+build/%.array.js: data/%.tsv
+	node index.js build trie -o $@ $<
 
 .PHONY: all
