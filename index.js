@@ -28,9 +28,21 @@ main().catch(err => {
 });
 
 async function main () {
-  let wordlist = await libwordlist.buildWordList('data/SaanichWordFreq.txt');
-  fs.promises.writeFile('build/SaanichWordFreq.raw-wordlist',
-    JSON.stringify(wordlist),
-    'UTF-8'
-  );
+  let [_node, _scriptName, subcommand, ...options] = process.argv;
+
+  // ad hoc command line parsing
+  if (subcommand !== 'build') {
+    throw new Error(`requires subcommand: 'build'`);
+  }
+
+  let [flag, outfile, infile] = options;
+  if (flag !== '-o' || !outfile || !infile) {
+    throw new Error('invalid command line');
+  }
+  await createWordlist(infile, outfile);
+}
+
+async function createWordlist(infile, outfile) {
+  let wordlist = await libwordlist.buildWordList(infile);
+  fs.promises.writeFile(outfile, JSON.stringify(wordlist), 'UTF-8');
 }

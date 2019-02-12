@@ -49,5 +49,8 @@ exports.buildWordList = async function buildWordList(filename) {
     entry.negLogProb = -Math.log(entry.rawFrequency / totalTokens);
   }
 
-  return list;
+  return {
+    total: totalTokens,
+    wordlist: list
+  };
 };
