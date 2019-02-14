@@ -84,7 +84,7 @@ function buildWordListFromString(contents) {
 
   return {
     total: totalTokens,
-    wordlist: list
+    entries: list
   };
 }
 

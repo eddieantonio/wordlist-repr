@@ -9,11 +9,10 @@ test.beforeEach(async t => {
 });
 
 test(`building`, t => {
-  let wordlist = t.context.wordlist;
-  let dataStructure = simpleArray.build(wordlist);
+  let dataStructure = simpleArray.build(t.context.wordlist);
   // Assertions specific to this data structure.
   t.true(Array.isArray(dataStructure));
-  t.is(dataStructure.length, wordlist.wordlist.length);
+  t.is(dataStructure.length, t.context.wordlist.entries.length);
 });
 
 test(`serializing`, t => {
@@ -32,7 +31,7 @@ test(`lookup entire dictionary`, t => {
   let serialized = fs.readFileSync(`./build/SaanichWordFreq.${name}.js`);
   let dataStructure = simpleArray.load(serialized);
   /* Warning: this is O(n²). */
-  for (let {word} of t.context.wordlist.wordlist) {
+  for (let {word} of t.context.wordlist.entries) {
     let results = Array.from(simpleArray.lookup(dataStructure, word));
     t.true(results.includes(word));
   }

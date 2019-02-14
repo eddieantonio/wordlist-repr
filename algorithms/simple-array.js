@@ -36,8 +36,8 @@ exports.doc = `
  * Returns an array of words, sorted in descending order of raw frequency.
  * That is, the most common words are first; the least common last.
  */
-exports.build = function buildSimpleArray({wordlist}) {
-  let sortedList = wordlist.sort((a, b) => {
+exports.build = function buildSimpleArray(wordlist) {
+  let sortedList = wordlist.entries.sort((a, b) => {
     let aCount = a.rawFrequency;
     let bCount = b.rawFrequency;
     if (aCount > bCount) {
