@@ -21,7 +21,14 @@
 
 const fs = require('fs');
 
-exports.buildWordList = async function buildWordList(filename) {
+module.exports = {
+  buildWordList,
+  loadWordList,
+  buildWordListFromString,
+  loadWordListFromString,
+};
+
+async function buildWordList(filename) {
   let contents = await fs.promises.readFile(filename, 'UTF-8');
   let totalTokens = 0;
   let list = [];
@@ -53,9 +60,47 @@ exports.buildWordList = async function buildWordList(filename) {
     total: totalTokens,
     wordlist: list
   };
-};
+}
 
-exports.loadWordList = async function loadWordList(filename) {
+async function loadWordList(filename) {
   let contents = await fs.promises.readFile(filename, 'UTF-8');
   return JSON.parse(contents);
-};
+}
+
+function buildWordListFromString(contents) {
+  let totalTokens = 0;
+  let list = [];
+
+  // Collect all entries with their raw frequencies
+  for (let line of contents.split('\n')) {
+    let [word, freqText] = line.split('\t');
+    let rawFrequency = parseInt(freqText, 10);
+    if (!(rawFrequency >= 1)) {
+      console.warn(`Skipping bad line: '${line.trim()}'`);
+      continue;
+    }
+    list.push({ word, rawFrequency });
+    totalTokens += rawFrequency;
+  }
+
+  // After we know the total weight of everything, we
+  // can compute the negative log probability of all the things.
+  for (let entry of list) {
+    // Neg log prob allows us to add values to get the AND of two independent
+    // probabilities.
+    //
+    // We can sort for most probable branch by visiting the lowest valued
+    // branches first.
+    entry.negLogProb = -Math.log(entry.rawFrequency / totalTokens);
+  }
+
+  return {
+    total: totalTokens,
+    wordlist: list
+  };
+}
+
+
+function loadWordListFromString(contents) {
+  return JSON.parse(contents);
+}
