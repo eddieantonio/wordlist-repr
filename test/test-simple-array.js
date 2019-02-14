@@ -36,11 +36,3 @@ test(`lookup entire dictionary`, t => {
     t.true(results.includes(word));
   }
 });
-
-function first(iterable) {
-  let {done, value} = iterable.next();
-  if (done) {
-    throw new RangeError('Did not produce an item');
-  }
-  return value;
-}
