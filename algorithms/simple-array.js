@@ -62,8 +62,19 @@ exports.serialize = function serializeSimpleArray(sortedArray) {
 }
 
 /**
- * Loading is a matter of parsing the JSON. 
+ * Loading is a matter of parsing the JSON.
  */
 exports.load = function loadSimpleArray(string) {
   return JSON.parse(string);
+}
+
+/**
+ * Search linearly in the array, yielding entries that match the prefix.
+ */
+exports.lookup = function* lookupSimpleArray(array, prefix) {
+  for (let word of array) {
+    if (word.substring(0, prefix.length) === prefix) {
+      yield word;
+    }
+  }
 }

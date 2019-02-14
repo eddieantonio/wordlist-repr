@@ -5,7 +5,7 @@ import {loadWordList} from '../libwordlist';
 import simpleArray, {name} from '../algorithms/simple-array';
 
 test.beforeEach(async t => {
-  t.context.wordlist = await loadWordList('./build/SaanichWordFreq.raw-wordlist.js', 'UTF-8');
+  t.context.wordlist = await loadWordList('./build/SaanichWordFreq.raw-wordlist.js');
 });
 
 test(`building`, t => {
@@ -28,5 +28,20 @@ test(`loading`, t => {
   t.deepEqual(simpleArray.load(serialized), dataStructure);
 });
 
-/* TODO: Test that we can lookup every element in in it */
-test.todo(`[${name}]: lookup`);
+test(`lookup entire dictionary`, t => {
+  let serialized = fs.readFileSync(`./build/SaanichWordFreq.${name}.js`);
+  let dataStructure = simpleArray.load(serialized);
+  /* Warning: this is O(n²). */
+  for (let {word} of t.context.wordlist.wordlist) {
+    let results = Array.from(simpleArray.lookup(dataStructure, word));
+    t.true(results.includes(word));
+  }
+});
+
+function first(iterable) {
+  let {done, value} = iterable.next();
+  if (done) {
+    throw new RangeError('Did not produce an item');
+  }
+  return value;
+}
