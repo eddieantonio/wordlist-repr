@@ -22,5 +22,11 @@ test(`serializing`, t => {
   t.true(typeof serialized === 'string');
 });
 
+test(`loading`, t => {
+  let dataStructure = simpleArray.build(t.context.wordlist);
+  let serialized = simpleArray.serialize(dataStructure);
+  t.deepEqual(simpleArray.load(serialized), dataStructure);
+});
+
 /* TODO: Test that we can lookup every element in in it */
 test.todo(`[${name}]: lookup`);

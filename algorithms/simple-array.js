@@ -60,3 +60,10 @@ exports.build = function buildSimpleArray({wordlist}) {
 exports.serialize = function serializeSimpleArray(sortedArray) {
   return JSON.stringify(sortedArray);
 }
+
+/**
+ * Loading is a matter of parsing the JSON. 
+ */
+exports.load = function loadSimpleArray(string) {
+  return JSON.parse(string);
+}
