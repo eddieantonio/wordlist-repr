@@ -28,43 +28,31 @@ module.exports = {
   loadWordListFromString,
 };
 
+/**
+ * Reads the TSV file and returns an internal wordlist. This wordlist can be fed
+ * to other functions to build more sophisticated wordlists.
+ *
+ * The TSV should adhere to these requirements:
+ *
+ *  * one word per line
+ *  * no header
+ *  * each line is:
+ *    - the word
+ *    - a single tab character <U+0009>
+ *    - the raw count, as a decimal whole number
+ *    - a newline character
+ */
 async function buildWordList(filename) {
   let contents = await fs.promises.readFile(filename, 'UTF-8');
-  let totalTokens = 0;
-  let list = [];
-
-  // Collect all entries with their raw frequencies
-  for (let line of contents.split('\n')) {
-    let [word, freqText] = line.split('\t');
-    let rawFrequency = parseInt(freqText, 10);
-    if (!(rawFrequency >= 1)) {
-      console.warn(`Skipping bad line: '${line.trim()}'`);
-      continue;
-    }
-    list.push({ word, rawFrequency });
-    totalTokens += rawFrequency;
-  }
-
-  // After we know the total weight of everything, we
-  // can compute the negative log probability of all the things.
-  for (let entry of list) {
-    // Neg log prob allows us to add values to get the AND of two independent
-    // probabilities.
-    //
-    // We can sort for most probable branch by visiting the lowest valued
-    // branches first.
-    entry.negLogProb = -Math.log(entry.rawFrequency / totalTokens);
-  }
-
-  return {
-    total: totalTokens,
-    wordlist: list
-  };
+  return buildWordListFromString(contents);
 }
 
+/**
+ * Loads the file as a wordlist.
+ */
 async function loadWordList(filename) {
   let contents = await fs.promises.readFile(filename, 'UTF-8');
-  return JSON.parse(contents);
+  return loadWordListFromString(contents);
 }
 
 function buildWordListFromString(contents) {
@@ -102,5 +90,6 @@ function buildWordListFromString(contents) {
 
 
 function loadWordListFromString(contents) {
+  // Shh! The stringified form is just JSON!
   return JSON.parse(contents);
 }
