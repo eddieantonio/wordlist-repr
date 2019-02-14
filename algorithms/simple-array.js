@@ -53,3 +53,10 @@ exports.build = function buildSimpleArray({wordlist}) {
 
   return sortedList.map(({word}) => word);
 };
+
+/**
+ * Serialization is a matter of saving as a JSON array.
+ */
+exports.serialize = function serializeSimpleArray(sortedArray) {
+  return JSON.stringify(sortedArray);
+}

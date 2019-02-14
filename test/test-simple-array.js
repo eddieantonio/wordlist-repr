@@ -15,7 +15,14 @@ test(`[${name}]: building`, t => {
   t.is(dataStructure.length, wordlist.wordlist.length);
 });
 
-test.todo(`[${name}]: serialize`);
+test(`[${name}]: serialize`, t => {
+  let contents = fs.readFileSync('./build/SaanichWordFreq.raw-wordlist.js', 'UTF-8');
+  let wordlist = loadWordListFromString(contents);
+
+  let dataStructure = simpleArray.build(wordlist);
+  let serialized = simpleArray.serialize(dataStructure);
+  t.true(typeof serialized === 'string');
+});
 
 /* TODO: Test that we can lookup every element in in it */
 test.todo(`[${name}]: lookup`);
