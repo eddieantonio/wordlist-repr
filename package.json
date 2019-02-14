@@ -2,7 +2,6 @@
   "name": "wordlist-repr",
   "version": "1.0.0",
   "description": "Experimenting with different word list representations",
-  "main": "index.js",
   "scripts": {
     "test": "ava"
   },

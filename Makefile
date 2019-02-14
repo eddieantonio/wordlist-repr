@@ -22,15 +22,12 @@ FORMATS = raw-wordlist simple-array
 all: $(patsubst %,build/SaanichWordFreq.%.js,$(FORMATS))
 
 build/%.raw-wordlist.js: data/%.tsv
-	node index.js build-raw-wordlist -o $@ $<
+	node build.js build-raw-wordlist -o $@ $<
 
 build/%.simple-array.js: build/%.raw-wordlist.js
-	node index.js build simple-array -o $@ $<
+	node build.js build simple-array -o $@ $<
 
-build/%.array.js: build/%.raw-wordlist.js
-	node index.js build length-array -o $@ $<
-
-build/%.array.js: build/%.raw-wordlist.js
-	node index.js build trie -o $@ $<
+build/%.binary-array.js: build/%.raw-wordlist.js
+	node build.js build trie -o $@ $<
 
 .PHONY: all
