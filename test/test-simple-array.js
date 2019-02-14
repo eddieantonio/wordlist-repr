@@ -1,25 +1,23 @@
 import test from 'ava';
 import fs from 'fs';
 
-import {loadWordListFromString} from '../libwordlist';
+import {loadWordList} from '../libwordlist';
 import simpleArray, {name} from '../algorithms/simple-array';
 
+test.beforeEach(async t => {
+  t.context.wordlist = await loadWordList('./build/SaanichWordFreq.raw-wordlist.js', 'UTF-8');
+});
 
-test(`[${name}]: building`, t => {
-  let contents = fs.readFileSync('./build/SaanichWordFreq.raw-wordlist.js', 'UTF-8');
-  let wordlist = loadWordListFromString(contents);
-
+test(`building`, t => {
+  let wordlist = t.context.wordlist;
   let dataStructure = simpleArray.build(wordlist);
   // Assertions specific to this data structure.
   t.true(Array.isArray(dataStructure));
   t.is(dataStructure.length, wordlist.wordlist.length);
 });
 
-test(`[${name}]: serialize`, t => {
-  let contents = fs.readFileSync('./build/SaanichWordFreq.raw-wordlist.js', 'UTF-8');
-  let wordlist = loadWordListFromString(contents);
-
-  let dataStructure = simpleArray.build(wordlist);
+test(`serializing`, t => {
+  let dataStructure = simpleArray.build(t.context.wordlist);
   let serialized = simpleArray.serialize(dataStructure);
   t.true(typeof serialized === 'string');
 });
