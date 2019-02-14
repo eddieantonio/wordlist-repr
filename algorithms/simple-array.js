@@ -21,11 +21,35 @@
 
 exports.name = 'simple-array';
 exports.doc = `
-  Stores all words in an an array of arrays.
+  Stores all words in a single array, ordered from most frequent word to least frequent word.
+  Lookup is done linearly.
 
   Benefits:
     Very simple storage.
-  
-  Disadvantages:
-    Slow?
+    Simple to implement.
+
+  Best case lookup:   O(1)
+  Worst case lookup:  O(n)
 `;
+
+/**
+ * Returns an array of words, sorted in descending order of raw frequency.
+ * That is, the most common words are first; the least common last.
+ */
+exports.build = function buildSimpleArray({wordlist}) {
+  let sortedList = wordlist.sort((a, b) => {
+    let aCount = a.rawFrequency;
+    let bCount = b.rawFrequency;
+    if (aCount > bCount) {
+      return -1;
+    } else if (aCount < bCount) {
+      return 1;
+    } else {
+      // Asserting they're equal, because we might have those pesky NaNs.
+      console.assert(aCount === bCount);
+      return 0;
+    }
+  });
+
+  return sortedList.map(({word}) => word);
+};
