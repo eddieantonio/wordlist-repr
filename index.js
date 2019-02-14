@@ -46,11 +46,11 @@ async function main () {
       throw new Error(`invalid command line: ${options.join(' ')}`);
     }
 
-    let {build} = require(`./algorithms/${algorithm}`);
+    let {build, serialize} = require(`./algorithms/${algorithm}`);
 
-    let wordlist = libwordlist.loadWordList(infile);
+    let wordlist = await libwordlist.loadWordList(infile);
     let dataStructure = build(wordlist);
-    await fs.promises.writeFile(outfile, JSON.stringify(dataStructure), 'UTF-8');
+    await fs.promises.writeFile(outfile, serialize(dataStructure), 'UTF-8');
 
   } else {
     throw new Error(`invalid subcommand: '${subcommand}'`);
