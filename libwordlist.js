@@ -60,13 +60,10 @@ function buildWordListFromString(contents) {
   let list = [];
 
   // Collect all entries with their raw frequencies
-  for (let line of contents.split('\n')) {
+  for (let line of contents.trimEnd().split('\n')) {
     let [word, freqText] = line.split('\t');
     let rawFrequency = parseInt(freqText, 10);
-    if (!(rawFrequency >= 1)) {
-      console.warn(`Skipping bad line: '${line.trim()}'`);
-      continue;
-    }
+    console.assert(word !== '');
     list.push({ word, rawFrequency });
     totalTokens += rawFrequency;
   }

@@ -27,10 +27,10 @@ test(`loading`, t => {
   t.deepEqual(simpleArray.load(serialized), dataStructure);
 });
 
-test(`lookup entire dictionary`, t => {
+/* Skipping because this is O(n²). */
+test.skip(`lookup entire dictionary`, t => {
   let serialized = fs.readFileSync(`./build/SaanichWordFreq.${name}.js`);
   let dataStructure = simpleArray.load(serialized);
-  /* Warning: this is O(n²). */
   for (let {word} of t.context.wordlist.entries) {
     let results = Array.from(simpleArray.lookup(dataStructure, word));
     t.true(results.includes(word));
