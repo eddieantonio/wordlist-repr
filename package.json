@@ -5,8 +5,9 @@
   "scripts": {
     "test": "ava"
   },
-  "author": "Eddie Antonio Santos",
+  "author": "Eddie Antonio Santos <Eddie.Santos@nrc-cnrc.gc.ca",
   "license": "MIT",
+  "private": true,
   "devDependencies": {
     "ava": "^1.2.1",
     "parcel-bundler": "^1.11.0"
